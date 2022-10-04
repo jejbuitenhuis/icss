@@ -8,16 +8,16 @@ public class Stylerule extends ASTNode {
 	public ArrayList<Selector> selectors = new ArrayList<>();
 	public ArrayList<ASTNode> body = new ArrayList<>();
 
-    public Stylerule() { }
+	public Stylerule() { }
 
-    public Stylerule(Selector selector, ArrayList<ASTNode> body) {
+	public Stylerule(Selector selector, ArrayList<ASTNode> body) {
 
-    	this.selectors = new ArrayList<>();
-    	this.selectors.add(selector);
-    	this.body = body;
-    }
+		this.selectors = new ArrayList<>();
+		this.selectors.add(selector);
+		this.body = body;
+	}
 
-    @Override
+	@Override
 	public String getNodeLabel() {
 		return "Stylerule";
 	}
@@ -30,15 +30,15 @@ public class Stylerule extends ASTNode {
 		return children;
 	}
 
-    @Override
-    public ASTNode addChild(ASTNode child) {
+	@Override
+	public ASTNode addChild(ASTNode child) {
 		if(child instanceof Selector)
 			selectors.add((Selector) child);
 		else
-        	body.add(child);
+			body.add(child);
 
 		return this;
-    }
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

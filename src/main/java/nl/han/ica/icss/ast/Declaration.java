@@ -19,7 +19,7 @@ public class Declaration extends ASTNode {
 	}
 	@Override
 	public String getNodeLabel() {
-	    return "Declaration";
+		return "Declaration";
 	}
 
 	@Override
@@ -27,9 +27,9 @@ public class Declaration extends ASTNode {
 
 		ArrayList<ASTNode> children = new ArrayList<>();
 		if(property != null)
-		    children.add(property);
+			children.add(property);
 		if(expression != null)
-		    children.add(expression);
+			children.add(expression);
 		return children;
 	}
 	@Override

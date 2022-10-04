@@ -30,8 +30,8 @@ public class Stylesheet extends ASTNode {
 	}
 	@Override
 	public ASTNode addChild(ASTNode child) {
-	    	body.add(child);
-	    	return this;
+			body.add(child);
+			return this;
 	}
 	@Override
 	public ASTNode removeChild(ASTNode child) {

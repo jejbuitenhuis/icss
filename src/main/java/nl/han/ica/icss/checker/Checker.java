@@ -10,12 +10,12 @@ import java.util.HashMap;
 
 public class Checker {
 
-    private IHANLinkedList<HashMap<String, ExpressionType>> variableTypes;
+	private IHANLinkedList<HashMap<String, ExpressionType>> variableTypes;
 
-    public void check(AST ast) {
-        // variableTypes = new HANLinkedList<>();
+	public void check(AST ast) {
+		// variableTypes = new HANLinkedList<>();
 
-    }
+	}
 
-    
+	
 }
