@@ -10,12 +10,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 
 @SuppressWarnings("restriction")
-public class OutputPane extends BorderPane {
-
+public class OutputPane extends BorderPane
+{
 	private Label title;
 	private TextArea content;
 
-	public OutputPane () {
+	public OutputPane ()
+	{
 		super();
 
 		title = new Label("Output (CSS):");
@@ -27,18 +28,27 @@ public class OutputPane extends BorderPane {
 		setTop(title);
 		setCenter(content);
 	}
-	public void setText(String text) {
+
+	public void setText(String text)
+	{
 		content.setText(text);
 	}
-	public String getText() {
+
+	public String getText()
+	{
 		return content.getText();
 	}
-	public void writeToFile(File file) {
-		try {
-			PrintStream out = new PrintStream(new FileOutputStream(file));
-			out.print(this.getText());
+
+	public void writeToFile(File file)
+	{
+		try
+		{
+			PrintStream out = new PrintStream( new FileOutputStream(file) );
+			out.print( this.getText() );
 			out.close();
-		} catch(Exception exception) {
+		}
+		catch(Exception exception)
+		{
 			System.err.println(exception);
 		}
 	}

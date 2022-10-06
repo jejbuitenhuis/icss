@@ -8,14 +8,13 @@ import java.util.HashMap;
 
 
 
-public class Checker {
+public class Checker
+{
+	private IHANLinkedList< HashMap<String, ExpressionType> > variableTypes;
 
-	private IHANLinkedList<HashMap<String, ExpressionType>> variableTypes;
-
-	public void check(AST ast) {
+	public void check(AST ast)
+	{
+		// TODO:
 		// variableTypes = new HANLinkedList<>();
-
 	}
-
-	
 }

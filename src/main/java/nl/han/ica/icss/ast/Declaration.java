@@ -6,44 +6,53 @@ import java.util.Objects;
 /*
  * A Declaration defines a style property. Declarations are things like "width: 100px"
  */
-public class Declaration extends ASTNode {
+public class Declaration extends ASTNode
+{
 	public PropertyName property;
 	public Expression expression;
 
-	public Declaration() {
+	public Declaration()
+	{
 		super();
 	}
-	public Declaration(String property) {
+
+	public Declaration(String property)
+	{
 		super();
 		this.property = new PropertyName(property);
 	}
+
 	@Override
-	public String getNodeLabel() {
+	public String getNodeLabel()
+	{
 		return "Declaration";
 	}
 
 	@Override
-	public ArrayList<ASTNode> getChildren() {
-
+	public ArrayList<ASTNode> getChildren()
+	{
 		ArrayList<ASTNode> children = new ArrayList<>();
-		if(property != null)
-			children.add(property);
-		if(expression != null)
-			children.add(expression);
+
+		if(property != null) children.add(property);
+		if(expression != null) children.add(expression);
+
 		return children;
 	}
+
 	@Override
-	public ASTNode addChild(ASTNode child) {
-		if(child instanceof PropertyName) {
+	public ASTNode addChild(ASTNode child)
+	{
+		if(child instanceof PropertyName)
 			property = (PropertyName) child;
-		} else if(child instanceof Expression) {
+		else if(child instanceof Expression)
 			expression = (Expression) child;
-		}
+
 		return this;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
@@ -51,8 +60,10 @@ public class Declaration extends ASTNode {
 		return Objects.equals(property, that.property) &&
 				Objects.equals(expression, that.expression);
 	}
+
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return Objects.hash(property, expression);
 	}
 }

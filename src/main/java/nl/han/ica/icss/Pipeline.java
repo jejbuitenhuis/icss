@@ -19,43 +19,55 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-public class Pipeline implements ANTLRErrorListener {
-
+public class Pipeline implements ANTLRErrorListener
+{
 	private AST ast;
 	private boolean parsed = false;
 	private boolean checked = false;
 	private boolean transformed = false;
 	private List<String> errors;
 
-	public Pipeline() {
+	public Pipeline()
+	{
 		errors = new ArrayList<>();
 	}
 
-	public AST getAST() {
+	public AST getAST()
+	{
 		return ast;
 	}
-	public List<String> getErrors() {
+
+	public List<String> getErrors()
+	{
 		return errors;
 	}
-	public boolean isParsed() {
+
+	public boolean isParsed()
+	{
 		return parsed;
 	}
-	public boolean isChecked() {
+
+	public boolean isChecked()
+	{
 		return checked;
 	}
-	public boolean isTransformed() {
+
+	public boolean isTransformed()
+	{
 		return transformed;
 	}
 
-	public void parseString(String input) {
-
+	public void parseString(String input)
+	{
 		//Lex (with Antlr's generated lexer)
 		CharStream inputStream = CharStreams.fromString(input);
 		ICSSLexer lexer = new ICSSLexer(inputStream);
 		lexer.removeErrorListeners();
 		lexer.addErrorListener(this);
 		errors.clear();
-		try {
+
+		try
+		{
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 
 			//Parse (with Antlr's generated parser)
@@ -72,50 +84,58 @@ public class Pipeline implements ANTLRErrorListener {
 
 			this.ast = listener.getAST();
 
-		} catch (RecognitionException e) {
+		}
+		catch (RecognitionException e)
+		{
 			this.ast = new AST();
-			errors.add(e.getMessage());
-
-		} catch (ParseCancellationException e) {
+			errors.add( e.getMessage() );
+		}
+		catch (ParseCancellationException e)
+		{
 			this.ast = new AST();
 			errors.add("Syntax error");
 		}
+
 		parsed = errors.isEmpty();
 		checked = transformed = false;
 	}
-	public boolean check() {
-			if(ast == null)
-				return false;
 
-		   (new Checker()).check(this.ast);
+	public boolean check()
+	{
+		if(ast == null) return false;
 
-			ArrayList<SemanticError> errors = this.ast.getErrors();
-			if (!errors.isEmpty()) {
-				for (SemanticError e : errors) {
-					this.errors.add(e.toString());
-				}
-			}
+		( new Checker() ).check(this.ast);
 
-			checked = errors.isEmpty();
-			transformed = false;
-			return errors.isEmpty();
+		ArrayList<SemanticError> errors = this.ast.getErrors();
+
+		if ( !errors.isEmpty() )
+			for (SemanticError e : errors)
+				this.errors.add( e.toString() );
+
+		checked = errors.isEmpty();
+		transformed = false;
+
+		return errors.isEmpty();
 	}
 
-	public void clearErrors(){
+	public void clearErrors()
+	{
 		errors.clear();
 	}
 
-	public void transform() {
-		if(ast == null)
-			return;
+	public void transform()
+	{
+		if(ast == null) return;
 
-		(new Evaluator()).apply(ast);
-
+		( new Evaluator() ).apply(ast);
 
 		transformed = errors.isEmpty();
 	}
-	public String generate() {
+
+	public String generate()
+	{
 		Generator generator = new Generator();
+
 		return generator.generate(ast);
 	}
 

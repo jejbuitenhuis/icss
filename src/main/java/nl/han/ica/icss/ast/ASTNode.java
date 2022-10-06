@@ -5,15 +5,16 @@ import nl.han.ica.icss.checker.SemanticError;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ASTNode {
-
+public class ASTNode
+{
 	private SemanticError error = null;
 
 	/*
 	 This method is used in the GUI to create an appropriate label
 	 in the tree visualisation.
 	  */
-	public String getNodeLabel() {
+	public String getNodeLabel()
+	{
 		return "ASTNode";
 	}
 
@@ -21,53 +22,64 @@ public class ASTNode {
 	 Different AST nodes use different attributes to store their children.
 	 This method provides a unified interface.
 	 */
-	public ArrayList<ASTNode> getChildren() {
+	public ArrayList<ASTNode> getChildren()
+	{
 		return new ArrayList<>();
 	}
 	/*
 	By implementing this method in a subclass you can easily create AST nodes
 	  incrementally.
 	*/
-	public ASTNode addChild(ASTNode child) {
+	public ASTNode addChild(ASTNode child)
+	{
 			return this;
 	}
+
 	/*
 	* By implementing this method you can easily make transformations that prune the AST.
 	*/
-	public ASTNode removeChild(ASTNode child) {
+	public ASTNode removeChild(ASTNode child)
+	{
 		return this;
 	}
 
-	public SemanticError getError() {
+	public SemanticError getError()
+	{
 		return this.error;
 	}
 
-	public void setError(String description) {
+	public void setError(String description)
+	{
 		this.error = new SemanticError(description);
 	}
 
-	public boolean hasError() {
+	public boolean hasError()
+	{
 		return error != null;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder result = new StringBuilder();
 		toString(result);
 		return result.toString();
 	}
-	private void toString(StringBuilder builder) {
+
+	private void toString(StringBuilder builder)
+	{
 		builder.append("[");
-		builder.append(getNodeLabel());	
+		builder.append(getNodeLabel());
 		builder.append("|");
-		for(ASTNode child : getChildren()) {
-			child.toString(builder);
-		}	
+
+		for( ASTNode child : getChildren() ) child.toString(builder);
+
 		builder.append("]");
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if(! (o instanceof ASTNode))
 			return false;
 		//Compare all children

@@ -4,32 +4,40 @@ import nl.han.ica.icss.ast.Selector;
 
 import java.util.Objects;
 
-public class ClassSelector extends Selector {
+public class ClassSelector extends Selector
+{
 	public String cls;
 
-	public ClassSelector(String cls) {
+	public ClassSelector(String cls)
+	{
 		this.cls = cls;
 	}
 
 	@Override
-	public String getNodeLabel() {
+	public String getNodeLabel()
+	{
 		return "ClassSelector " + cls;
 	}
 
-	public String toString() {
+	public String toString()
+	{
 		return cls;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object o)
+	{
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
+
 		ClassSelector that = (ClassSelector) o;
+
 		return Objects.equals(cls, that.cls);
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		return Objects.hash(cls);
 	}
 }
