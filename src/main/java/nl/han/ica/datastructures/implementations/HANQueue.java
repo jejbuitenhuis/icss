@@ -29,21 +29,17 @@ public class HANQueue<T> implements IHANQueue<T>
 	@Override
 	public T dequeue()
 	{ // {{{
-		try {
-			return this.queue.remove(0);
-		} catch (Exception e) {
-			return null;
-		}
+		T temp = this.queue.getFirst();
+
+		this.queue.removeFirst();
+
+		return temp;
 	} // }}}
 
 	@Override
 	public T peek()
 	{ // {{{
-		try {
-			return this.queue.get(0);
-		} catch (Exception e) {
-			return null;
-		}
+		return this.queue.get(0);
 	} // }}}
 
 	@Override
