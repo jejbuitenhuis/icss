@@ -4,7 +4,7 @@ import nl.han.ica.datastructures.IHANLinkedList;
 
 public class HANLinkedList<T> implements IHANLinkedList<T>
 {
-	private class HANNode<N>
+	private static class HANNode<N>
 	{ // {{{
 		public N value;
 		public HANNode<N> next;
@@ -32,7 +32,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T>
 	@Override
 	public void addFirst(T value)
 	{ // {{{
-		HANNode<T> temp = new HANNode<T>(value);
+		HANNode<T> temp = new HANNode<>(value);
 
 		if (this.head == null)
 		{
@@ -56,7 +56,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T>
 	@Override
 	public void insert(int index, T value)
 	{ // {{{
-		HANNode<T> temp = new HANNode<T>(value);
+		HANNode<T> temp = new HANNode<>(value);
 
 		if (this.head == null)
 		{
@@ -90,6 +90,8 @@ public class HANLinkedList<T> implements IHANLinkedList<T>
 			HANNode<T> temp = this.head;
 
 			this.head = temp.next;
+
+			return;
 		}
 
 		HANNode<T> curr = this.head;
@@ -108,7 +110,9 @@ public class HANLinkedList<T> implements IHANLinkedList<T>
 
 		while (index-- > 0 && curr != null) curr = curr.next;
 
-		return curr.value;
+		return curr == null
+				? null
+				: curr.value;
 	} // }}}
 
 	@Override
