@@ -4,8 +4,6 @@ import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.datastructures.implementations.HANStack;
 import nl.han.ica.icss.ast.*;
 
-import javax.management.RuntimeErrorException;
-
 /**
  * This class extracts the ICSS Abstract Syntax Tree from the Antlr Parse tree.
  */
@@ -66,6 +64,43 @@ public class ASTListener extends ICSSBaseListener
 	} // }}}
 
 	@Override
+	public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx)
+	{ // {{{
+		this.currentContainer.push(
+			new VariableAssignment()
+		);
+	} // }}}
+
+	@Override
+	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx)
+	{ // {{{
+		// value got assigned to the VariableAssignment in `exitExpression`
+		ASTNode variableAssignment = this.currentContainer.pop();
+
+		if ( !(variableAssignment instanceof VariableAssignment) )
+			throw new RuntimeException("Unexpected non-variableAssignment");
+
+		this.currentContainer.peek() // the Stylesheet
+			.addChild(variableAssignment);
+	} // }}}
+
+	@Override
+	public void enterVariableReference(ICSSParser.VariableReferenceContext ctx)
+	{ // {{{
+		String variableName = ctx.getText();
+
+		ASTNode variableContainer = this.currentContainer.peek();
+
+		if ( !(
+			variableContainer instanceof VariableAssignment
+			|| variableContainer instanceof Expression
+		) )
+			throw new RuntimeException("Unexpected non-variableContainer");
+
+		variableContainer.addChild( new VariableReference(variableName) );
+	} // }}}
+
+	@Override
 	public void enterSelector(ICSSParser.SelectorContext ctx)
 	{ // {{{
 		this.currentContainer.push(
@@ -97,6 +132,7 @@ public class ASTListener extends ICSSBaseListener
 	@Override
 	public void exitStyling(ICSSParser.StylingContext ctx)
 	{ // {{{
+		// value got assigned to the Declaration in `exitExpression`
 		ASTNode declaration = this.currentContainer.pop();
 
 		if ( !(declaration instanceof Declaration) )
@@ -107,22 +143,22 @@ public class ASTListener extends ICSSBaseListener
 	} // }}}
 
 	@Override
-	public void enterLiteral(ICSSParser.LiteralContext ctx)
+	public void enterExpression(ICSSParser.ExpressionContext ctx)
 	{ // {{{
 		this.currentContainer.push(
-			Literal.fromString( ctx.getText() )
+			Expression.fromString( ctx.getText() )
 		);
 	} // }}}
 
 	@Override
-	public void exitLiteral(ICSSParser.LiteralContext ctx)
+	public void exitExpression(ICSSParser.ExpressionContext ctx)
 	{ // {{{
-		ASTNode literal = this.currentContainer.pop();
+		ASTNode expression = this.currentContainer.pop();
 
-		if ( !(literal instanceof Literal) )
-			throw new RuntimeException("Unexpected non-literal");
+		if ( !(expression instanceof Expression) )
+			throw new RuntimeException("Unexpected non-expression");
 
-		this.currentContainer.peek() // the Declaration
-			.addChild(literal);
+		this.currentContainer.peek() // the Declaration or VariableReference
+			.addChild(expression);
 	} // }}}
 }

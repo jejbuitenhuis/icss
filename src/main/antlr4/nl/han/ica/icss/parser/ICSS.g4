@@ -44,13 +44,21 @@ selector: LOWER_IDENT | ID_IDENT | CLASS_IDENT;
 
 declaration: LOWER_IDENT;
 
-literal: PIXELSIZE
-	| PERCENTAGE
-	| SCALAR
-	| COLOR;
+variableReference: CAPITAL_IDENT;
 
-styling: declaration COLON literal SEMICOLON;
+expression: PIXELSIZE
+	| PERCENTAGE
+	| COLOR
+	| SCALAR
+	// preferably TRUE and FALSE are separated from styling literals, but to make the parsing easier, they aren't
+	| TRUE
+	| FALSE
+	| variableReference;
+
+variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
+
+styling: declaration COLON expression SEMICOLON;
 
 styleRule: selector OPEN_BRACE styling* CLOSE_BRACE;
 
-stylesheet: styleRule* EOF;
+stylesheet: (variableAssignment | styleRule)* EOF;
