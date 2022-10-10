@@ -1,6 +1,7 @@
 package nl.han.ica.icss.ast;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import nl.han.ica.icss.ast.selectors.ClassSelector;
@@ -9,14 +10,23 @@ import nl.han.ica.icss.ast.selectors.TagSelector;
 
 public abstract class Selector extends ASTNode
 {
-	private static final HashMap< Character, Class<? extends Selector> > SELECTORS = new HashMap<>()
-	{
-		private static final long serialVersionUID = -2103460650832121914L;
-	{
-		put('#', IdSelector.class);
-		put('.', ClassSelector.class);
-	}};
-	private static final Class<? extends Selector> SELECTOR_DEFAULT = TagSelector.class;
+	private static final HashMap< Character, Constructor<? extends Selector> > SELECTORS = new HashMap<>();
+	private static final Constructor<? extends Selector> SELECTOR_DEFAULT;
+
+	static
+	{ // {{{
+		try
+		{
+			SELECTORS.put( '#', IdSelector.class.getConstructor(String.class) );
+			SELECTORS.put( '.', ClassSelector.class.getConstructor(String.class) );
+
+			SELECTOR_DEFAULT = TagSelector.class.getConstructor(String.class);
+		}
+		catch (NoSuchMethodException e)
+		{
+			throw new RuntimeException(e);
+		}
+	} // }}}
 
 	public static Selector fromString(String selector)
 	{ // {{{
@@ -26,16 +36,14 @@ public abstract class Selector extends ASTNode
 
 			if ( SELECTORS.containsKey(first) )
 			{
-				Class<? extends Selector> clazz = SELECTORS.get(first);
+				Constructor<? extends Selector> clazz = SELECTORS.get(first);
 
-				return clazz.getConstructor(String.class)
-					.newInstance(selector);
+				return clazz.newInstance(selector);
 			}
 
-			return SELECTOR_DEFAULT.getConstructor(String.class)
-				.newInstance(selector);
+			return SELECTOR_DEFAULT.newInstance(selector);
 		}
-		catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e)
+		catch (InstantiationException | InvocationTargetException | IllegalAccessException e)
 		{
 			throw new RuntimeException(e);
 		}
