@@ -10,7 +10,7 @@ public class HANStack<T> implements IHANStack<T>
 	@Override
 	public void push(T value)
 	{ // {{{
-		this.stack.insert(0, value);
+		this.stack.addFirst(value);
 	} // }}}
 
 	@Override

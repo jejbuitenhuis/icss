@@ -46,18 +46,27 @@ declaration: LOWER_IDENT;
 
 variableReference: CAPITAL_IDENT;
 
+operatorPrio: MUL;
+operator: PLUS | MIN;
+
 expression: PIXELSIZE
 	| PERCENTAGE
 	| COLOR
 	| SCALAR
-	// preferably TRUE and FALSE are separated from styling literals, but to make the parsing easier, they aren't
+	// preferably TRUE and FALSE are separated from styling literals, but to
+	// make the parsing easier, they aren't
 	| TRUE
 	| FALSE
 	| variableReference;
 
+operation: expression
+	| operation operatorPrio operation
+	| operation operator operation;
+
+// TODO: Shouldn't `expression` be a `operation`?
 variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 
-styling: declaration COLON expression SEMICOLON;
+styling: declaration COLON operation SEMICOLON;
 
 styleRule: selector OPEN_BRACE styling* CLOSE_BRACE;
 

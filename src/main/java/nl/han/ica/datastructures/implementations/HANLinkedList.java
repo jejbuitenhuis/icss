@@ -32,19 +32,7 @@ public class HANLinkedList<T> implements IHANLinkedList<T>
 	@Override
 	public void addFirst(T value)
 	{ // {{{
-		HANNode<T> temp = new HANNode<>(value);
-
-		if (this.head == null)
-		{
-			this.head = temp;
-			return;
-		}
-
-		HANNode<T> curr = this.head;
-
-		while (curr.next != null) curr = curr.next;
-
-		curr.next = temp;
+		this.insert(0, value);
 	} // }}}
 
 	@Override

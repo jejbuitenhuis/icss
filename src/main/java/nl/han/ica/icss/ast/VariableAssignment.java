@@ -15,6 +15,8 @@ public class VariableAssignment extends ASTNode
 	@Override
 	public String getNodeLabel()
 	{
+		if (this.name == null) return "VariableAssignment (null)";
+
 		return "VariableAssignment (" + name.name + ")";
 	}
 

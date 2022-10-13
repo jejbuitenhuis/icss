@@ -184,7 +184,7 @@ public class Fixtures
 		);
 		/*
 			#menu {
-			width: ParWidth + 2 * 10px;
+				width: ParWidth + 2 * 10px;
 			}
 		*/
 		stylesheet.addChild((new Stylerule())
