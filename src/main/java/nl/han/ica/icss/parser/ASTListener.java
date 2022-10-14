@@ -155,8 +155,11 @@ public class ASTListener extends ICSSBaseListener
 	{ // {{{
 		ASTNode declaration = this.currentContainer.pop();
 
-		if ( !(declaration instanceof Declaration) )
-			throw new RuntimeException("Unexpected non-declaration:" + declaration);
+		if ( !(
+			declaration instanceof Declaration
+			|| declaration instanceof IfClause)
+		)
+			throw new RuntimeException("Unexpected non-declaration or non-ifClause:" + declaration);
 
 		this.currentContainer.peek()
 			.addChild(declaration);
@@ -195,8 +198,32 @@ public class ASTListener extends ICSSBaseListener
 		}
 	} // }}}
 
+	@Override
+	public void enterIfStatement(ICSSParser.IfStatementContext ctx)
+	{ // {{{
+		this.currentContainer.push(
+			new IfClause()
+		);
+	} // }}}
 
+	@Override
+	public void enterElseStatement(ICSSParser.ElseStatementContext ctx)
+	{ // {{{
+		this.currentContainer.push(
+			new ElseClause()
+		);
+	} // }}}
 
+	@Override
+	public void exitElseStatement(ICSSParser.ElseStatementContext ctx)
+	{ // {{{
+		ASTNode elseStatement = this.currentContainer.pop();
+
+		if ( !(elseStatement instanceof ElseClause) )
+			throw new RuntimeException("Unexpected non-elseClause:" + elseStatement);
+
+		this.currentContainer.peek()
+			.addChild(elseStatement);
 	} // }}}
 
 	@Override

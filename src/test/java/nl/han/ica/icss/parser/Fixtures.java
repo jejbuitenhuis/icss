@@ -242,23 +242,13 @@ public class Fixtures
 				if[AdjustColor] {
 					color: #124532;
 					if[UseLinkColor]{
-						bg-color: LinkColor;
+						background-color: LinkColor;
+					} else {
+						background-color: #000000;
 					}
-				}
-			}
-			p {
-				background-color: #ffffff;
-				width: ParWidth;
-				if[AdjustColor] {
-					color: #124532;
-				if[UseLinkColor]{
-					background-color: LinkColor;
-				} else {
-					background-color: #000000;
 				}
 				height: 20px;
 			}
-}
 		*/
 		stylesheet.addChild((new Stylerule())
 			.addChild(new TagSelector("p"))

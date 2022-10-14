@@ -46,8 +46,8 @@ public class IfClause extends ASTNode
 	{
 		ArrayList<ASTNode> children = new ArrayList<>();
 
-		children.add(conditionalExpression);
-		children.addAll(body);
+		if (this.conditionalExpression != null) children.add(conditionalExpression);
+		if (this.body != null) children.addAll(body);
 
 		if (elseClause != null) children.add(elseClause);
 
