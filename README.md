@@ -22,7 +22,7 @@ Code explanations:
 | ❌          | CH00 | Minimum of four `CH`-requirements need to be implemented | Must |
 | ❌          | CH01 | Check for unused variables | Should |
 | ❌          | CH02 | Left and right values from calculation operators (`+`, `-` and `*`) must be the same. `4 * 5` and `20% * 3` are allowed, but `2px * 3px` isn't. | Should |
-| ❌          | CH03 | Left and right values from calculation operators (`+`, `-` and `*`) cannot be colors (e.g. `#ff0000`). | Should |
+| ✅          | CH03 | Left and right values from calculation operators (`+`, `-` and `*`) cannot be colors (e.g. `#ff0000`). | Should |
 | ✅          | CH04 | Check if the types of the value assigned to a property is the correct type for that property (`width: #ff0000` and `color: 12px` aren't correct). | Should |
 | ❌          | CH05 | Check if the condition in an if-else expression is a boolean type. | Should |
 | ❌          | CH06 | Check if variables are used within the correct scope. | Should |
