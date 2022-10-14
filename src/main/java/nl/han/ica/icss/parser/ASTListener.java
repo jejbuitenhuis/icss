@@ -59,7 +59,7 @@ public class ASTListener extends ICSSBaseListener
 		if ( !(styleRule instanceof Stylerule) )
 			throw new RuntimeException("Unexpected non-stylerule");
 
-		this.currentContainer.peek() // the Stylesheet
+		this.currentContainer.peek()
 			.addChild(styleRule);
 	} // }}}
 
@@ -74,35 +74,24 @@ public class ASTListener extends ICSSBaseListener
 	@Override
 	public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx)
 	{ // {{{
-		ASTNode expression = this.currentContainer.pop();
-		ASTNode variableReference = this.currentContainer.pop();
 		ASTNode variableAssignment = this.currentContainer.pop();
-
-		if ( !(expression instanceof Expression) )
-			throw new RuntimeException("Unexpected non-expression:" + expression);
-
-		if ( !(variableReference instanceof VariableReference) )
-			throw new RuntimeException("Unexpected non-variableReference:" + variableReference);
 
 		if ( !(variableAssignment instanceof VariableAssignment) )
 			throw new RuntimeException("Unexpected non-variableAssignment:" + variableAssignment);
 
-		variableAssignment.addChild(variableReference);
-		variableAssignment.addChild(expression);
-
-		this.currentContainer.peek() // the Stylesheet
+		this.currentContainer.peek()
 			.addChild(variableAssignment);
 	} // }}}
 
 	@Override
 	public void enterVariableReference(ICSSParser.VariableReferenceContext ctx)
 	{ // {{{
-		if ( this.currentContainer.peek() instanceof VariableReference )
+		if ( ctx.parent instanceof ICSSParser.ExpressionContext )
 			// the VariableReference is already handled by `enterExpression`.
 			// This can be handled by antlr in the .g4 file, but that creates
 			// a less readable .g4 file, because almost all `expression`s then
 			// become `(expression | variableReference)`, because
-			// `variableReference` then gets removed from `expression`
+			// `variableReference` gets removed from `expression`
 			return;
 
 		String variableName = ctx.getText();
@@ -110,6 +99,26 @@ public class ASTListener extends ICSSBaseListener
 		this.currentContainer.push(
 			new VariableReference(variableName)
 		);
+	} // }}}
+
+	@Override
+	public void exitVariableReference(ICSSParser.VariableReferenceContext ctx)
+	{ // {{{
+		if ( ctx.parent instanceof ICSSParser.ExpressionContext )
+			// the VariableReference is already handled by `exitExpression`.
+			// This can be handled by antlr in the .g4 file, but that creates
+			// a less readable .g4 file, because almost all `expression`s then
+			// become `(expression | variableReference)`, because
+			// `variableReference` gets removed from `expression`
+			return;
+
+		ASTNode variableReference = this.currentContainer.pop();
+
+		if ( !(variableReference instanceof VariableReference) )
+			throw new RuntimeException("Unexpected non-variableReference:" + variableReference);
+
+		this.currentContainer.peek()
+			.addChild(variableReference);
 	} // }}}
 
 	@Override
@@ -128,7 +137,7 @@ public class ASTListener extends ICSSBaseListener
 		if ( !(selector instanceof Selector) )
 			throw new RuntimeException("Unexpected non-selector");
 
-		this.currentContainer.peek() // the Stylerule
+		this.currentContainer.peek()
 			.addChild(selector);
 	} // }}}
 
@@ -144,18 +153,12 @@ public class ASTListener extends ICSSBaseListener
 	@Override
 	public void exitStyling(ICSSParser.StylingContext ctx)
 	{ // {{{
-		ASTNode expression = this.currentContainer.pop();
 		ASTNode declaration = this.currentContainer.pop();
-
-		if ( !(expression instanceof Expression) )
-			throw new RuntimeException("Unexpected non-expression:" + expression);
 
 		if ( !(declaration instanceof Declaration) )
 			throw new RuntimeException("Unexpected non-declaration:" + declaration);
 
-		declaration.addChild(expression);
-
-		this.currentContainer.peek() // the Selector
+		this.currentContainer.peek()
 			.addChild(declaration);
 	} // }}}
 
@@ -182,26 +185,18 @@ public class ASTListener extends ICSSBaseListener
 	{ // {{{
 		if ( ctx.getChildCount() == 3 )
 		{
-			ASTNode right = this.currentContainer.pop();
-			ASTNode left = this.currentContainer.pop();
 			ASTNode operation = this.currentContainer.pop();
-
-			if ( !(right instanceof Expression) )
-				throw new RuntimeException("Unexpected non-expression:" + right);
-
-			if ( !(left instanceof Expression) )
-				throw new RuntimeException("Unexpected non-expression:" + left);
 
 			if ( !(operation instanceof Operation) )
 				throw new RuntimeException("Unexpected non-operation:" + operation);
 
-			operation.addChild(left)
-				.addChild(right);
-
-			// push it back onto the stack instead of `peek().addChild(...)`,
-			// so we can use it as an Expression later
-			this.currentContainer.push(operation);
+			this.currentContainer.peek()
+				.addChild(operation);
 		}
+	} // }}}
+
+
+
 	} // }}}
 
 	@Override
@@ -210,5 +205,17 @@ public class ASTListener extends ICSSBaseListener
 		this.currentContainer.push(
 			Expression.fromString( ctx.getText() )
 		);
+	} // }}}
+
+	@Override
+	public void exitExpression(ICSSParser.ExpressionContext ctx)
+	{ // {{{
+		ASTNode expression = this.currentContainer.pop();
+
+		if ( !(expression instanceof Expression) )
+			throw new RuntimeException("Unexpected non-expression:" + expression);
+
+		this.currentContainer.peek()
+			.addChild(expression);
 	} // }}}
 }
