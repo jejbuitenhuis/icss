@@ -64,8 +64,6 @@ public class Checker
 	{ // {{{
 		this.variableTypes.addFirst( this.extractVariableTypes(node) );
 
-		System.out.println(this.variableTypes);
-
 		for ( ASTNode childNode : node.getChildren() )
 		{
 			CheckerFunction checker = Checker.getCheckerForNode(childNode);
