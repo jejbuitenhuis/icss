@@ -5,6 +5,7 @@ import nl.han.ica.datastructures.implementations.HANLinkedList;
 import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Declaration;
+import nl.han.ica.icss.ast.IfClause;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.VariableAssignment;
 import nl.han.ica.icss.ast.types.ExpressionType;
@@ -25,6 +26,7 @@ public class Checker
 	{
 		add( new Pair<>( Declaration.class, new DeclarationChecker() ) );
 		add( new Pair<>( Operation.class, new OperationChecker() ) );
+		add( new Pair<>( IfClause.class, new IfClauseChecker() ) );
 	}};
 
 	private static CheckerFunction getCheckerForNode(ASTNode node)
