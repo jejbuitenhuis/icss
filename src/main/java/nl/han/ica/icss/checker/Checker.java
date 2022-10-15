@@ -66,7 +66,7 @@ public class Checker
 		{
 			CheckerFunction checker = Checker.getCheckerForNode(childNode);
 
-			if (checker != null)
+			if ( checker != null && !childNode.hasError() )
 				checker.check(childNode, this.variableTypes);
 
 			if ( childNode.getChildren().size() > 0 )

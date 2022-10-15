@@ -53,6 +53,8 @@ public enum ExpressionType
 		// `2 * 3px`, so the typeRight is the type of the evaluated expression
 		if (typeLeft == SCALAR) return typeRight;
 
+		// typeLeft isn't a scalar, so typeRight must be a scalar or the same
+		// type as typeLeft, so typeLeft can be returned
 		return typeLeft;
 	} // }}}
 

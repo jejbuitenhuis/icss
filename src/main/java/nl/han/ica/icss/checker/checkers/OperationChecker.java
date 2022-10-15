@@ -30,12 +30,14 @@ public class OperationChecker implements CheckerFunction
 		Expression left = node.lhs;
 		Expression right = node.rhs;
 
+		ExpressionType typeLeft = ExpressionType.fromExpression(left, variableTypes);
+
+		// Check if left and right expressions aren't invalid types {{{
+
 		// if left or right are an Operation, they will get checked later,
 		// because we walk recursively through the AST
 		if ( !(left instanceof Operation) )
 		{
-			ExpressionType typeLeft = ExpressionType.fromExpression(left, variableTypes);
-
 			if ( DISALLOWED_TYPES.contains(typeLeft) )
 			{
 				String error = String.format(
@@ -45,13 +47,15 @@ public class OperationChecker implements CheckerFunction
 				);
 
 				node.setError(error);
+
+				return; // only one error per node allowed
 			}
 		}
 
+		ExpressionType typeRight = ExpressionType.fromExpression(right, variableTypes);
+
 		if ( !node.hasError() && !(right instanceof Operation) )
 		{
-			ExpressionType typeRight = ExpressionType.fromExpression(right, variableTypes);
-
 			if ( DISALLOWED_TYPES.contains(typeRight) )
 			{
 				String error = String.format(
@@ -61,8 +65,31 @@ public class OperationChecker implements CheckerFunction
 				);
 
 				node.setError(error);
+
+				return; // only one error per node allowed
 			}
 		}
+		// }}}
+
+		// Check if left and right expressions are the same ExpressionTypes {{{
+
+		// If one of the expressions is a scalar, it doesn't matter what the
+		// other type is, because `scalar * something` is always allowed
+		if (typeLeft == ExpressionType.SCALAR) return;
+		if (typeRight == ExpressionType.SCALAR) return;
+
+		if (typeLeft != typeRight)
+		{
+			String error = String.format(
+				"Types in operation must be the same, but got '%s' and '%s'",
+				typeLeft,
+				typeRight
+			);
+
+			node.setError(error);
+
+			return; // only one error per node allowed
+		}
+		// }}}
 	} // }}}
 }
-
