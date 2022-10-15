@@ -38,7 +38,7 @@ public class Checker
 		return null;
 	} // }}}
 
-	private void extractVariableTypes(ASTNode node)
+	private HashMap<String, ExpressionType> extractVariableTypes(ASTNode node)
 	{ // {{{
 		HashMap<String, ExpressionType> temp = new HashMap<>();
 
@@ -57,12 +57,14 @@ public class Checker
 			}
 		}
 
-		this.variableTypes.addFirst(temp);
+		return temp;
 	} // }}}
 
 	private void check(ASTNode node)
 	{ // {{{
-		this.extractVariableTypes(node);
+		this.variableTypes.addFirst( this.extractVariableTypes(node) );
+
+		System.out.println(this.variableTypes);
 
 		for ( ASTNode childNode : node.getChildren() )
 		{
@@ -74,6 +76,8 @@ public class Checker
 			if ( childNode.getChildren().size() > 0 )
 				this.check(childNode);
 		}
+
+		this.variableTypes.removeFirst();
 	} // }}}
 
 	public void check(AST ast)
