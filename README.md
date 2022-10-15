@@ -25,7 +25,7 @@ Code explanations:
 | ✅          | CH03 | Left and right values from calculation operators (`+`, `-` and `*`) cannot be colors (e.g. `#ff0000`). | Should |
 | ✅          | CH04 | Check if the types of the value assigned to a property is the correct type for that property (`width: #ff0000` and `color: 12px` aren't correct). | Should |
 | ✅          | CH05 | Check if the condition in an if-else expression is a boolean type. | Should |
-| ❌          | CH06 | Check if variables are used within the correct scope. | Should |
+| ❌          | CH06 | Check if variables are used within the correct scope. | Must |
 | ❌          | TR01 | Evaluate expressions (replace variables with their values). | Must |
 | ❌          | TR02 | Evaluate if-else expressions. If the expression is `TRUE`, use the body of the if-statement. If the expression is `FALSE`, use the body of the else-statement. If there is no else-statement, use an empty body. | Must |
 | ❌          | GE01 | Implement the generator (`nl.han.ica.icss.generator.Generator`) to generate a CSS2-compliant string. | Must |
