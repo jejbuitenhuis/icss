@@ -66,7 +66,7 @@ operation: expression
 // TODO: Shouldn't `expression` be a `operation`?
 variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 
-styling: ifStatement | (declaration COLON operation SEMICOLON);
+styling: ifStatement | variableAssignment | (declaration COLON operation SEMICOLON);
 
 elseStatement: ELSE OPEN_BRACE styling* CLOSE_BRACE;
 

@@ -149,20 +149,21 @@ public class ASTListener extends ICSSBaseListener
 		);
 	} // }}}
 
-	// use exitStyling instead of exitDeclaration
+	// use exitStyling instead of exitDeclaration, because an operation needs
+	// to be assigned to the declaration before it is removed from the stack
 	@Override
 	public void exitStyling(ICSSParser.StylingContext ctx)
 	{ // {{{
-		ASTNode declaration = this.currentContainer.pop();
+		ASTNode declaration = this.currentContainer.peek();
 
-		if ( !(
-			declaration instanceof Declaration
-			|| declaration instanceof IfClause)
-		)
-			throw new RuntimeException("Unexpected non-declaration or non-ifClause:" + declaration);
+		// IfClause and VariableAssignment are handled by their own exit method
+		if (declaration instanceof Declaration)
+		{
+			declaration = this.currentContainer.pop();
 
-		this.currentContainer.peek()
-			.addChild(declaration);
+			this.currentContainer.peek()
+				.addChild(declaration);
+		}
 	} // }}}
 
 	@Override
@@ -204,6 +205,18 @@ public class ASTListener extends ICSSBaseListener
 		this.currentContainer.push(
 			new IfClause()
 		);
+	} // }}}
+
+	@Override
+	public void exitIfStatement(ICSSParser.IfStatementContext ctx)
+	{ // {{{
+		ASTNode ifStatement = this.currentContainer.pop();
+
+		if ( !(ifStatement instanceof IfClause) )
+			throw new RuntimeException("Unexpected non-ifClause:" + ifStatement);
+
+		this.currentContainer.peek()
+			.addChild(ifStatement);
 	} // }}}
 
 	@Override
