@@ -20,7 +20,7 @@ public class Checker
 {
 	private IHANLinkedList< HashMap<String, ExpressionType> > variableTypes;
 
-	private static ArrayList< Pair< Class<? extends ASTNode>, CheckerFunction > > CHECKERS = new ArrayList<>()
+	private static final ArrayList< Pair< Class<? extends ASTNode>, CheckerFunction > > CHECKERS = new ArrayList<>()
 	{
 		private static final long serialVersionUID = -5415055408447394756L;
 	{
