@@ -17,6 +17,7 @@ public class Evaluator implements Transform
 		private static final long serialVersionUID = 1511648775391348036L;
 	{
 		add( new Pair<>( VariableReference.class, new VariableReferenceEvaluator() ) );
+		add( new Pair<>( Operation.class, new OperationEvaluator() ) );
 	}};
 
 	private IHANLinkedList< HashMap<String, Literal> > variableValues;

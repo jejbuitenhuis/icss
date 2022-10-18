@@ -19,6 +19,12 @@ public class ScalarLiteral extends Literal
 	}
 
 	@Override
+	public int getValue()
+	{ // {{{
+		return this.value;
+	} // }}}
+
+	@Override
 	public String getNodeLabel()
 	{
 		return "Scalar literal (" + value + ")";

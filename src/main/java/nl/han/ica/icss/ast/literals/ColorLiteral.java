@@ -13,6 +13,26 @@ public class ColorLiteral extends Literal
 		this.value = value;
 	}
 
+	public ColorLiteral(int value)
+	{
+		int r = (value >> 16) & 0xff;
+		int g = (value >> 8) & 0xff;
+		int b = value & 0xff;
+
+		this.value = String.format("#%02x%02x%02x", r, g, b);
+	}
+
+	@Override
+	public int getValue()
+	{ // {{{
+		String value = this.value.substring(1);
+		int r = Integer.parseInt( value.substring(0, 2), 16 );
+		int g = Integer.parseInt( value.substring(2, 4), 16 );
+		int b = Integer.parseInt( value.substring(4, 6), 16 );
+
+		return (r << 16) + (g << 8) + b;
+	} // }}}
+
 	@Override
 	public String getNodeLabel()
 	{

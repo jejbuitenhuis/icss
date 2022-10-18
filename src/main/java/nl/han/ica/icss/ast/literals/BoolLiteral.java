@@ -18,6 +18,18 @@ public class BoolLiteral extends Literal
 		this.value = text.equals("TRUE");
 	}
 
+	public BoolLiteral(int value)
+	{
+		this.value = value != 0;
+	}
+
+	@Override
+	public int getValue()
+	{ // {{{
+		// 1 is truthy, 0 is falsy
+		return this.value ? 1 : 0;
+	} // }}}
+
 	@Override
 	public String getNodeLabel()
 	{
