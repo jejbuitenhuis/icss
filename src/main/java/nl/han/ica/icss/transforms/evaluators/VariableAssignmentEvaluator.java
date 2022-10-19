@@ -2,7 +2,6 @@ package nl.han.ica.icss.transforms.evaluators;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.ASTNode;

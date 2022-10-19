@@ -5,9 +5,15 @@ import nl.han.ica.icss.checker.SemanticError;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ASTNode
+public abstract class ASTNode
 {
 	private SemanticError error = null;
+
+	/**
+	 * This method gets called when the actual CSS is generated from the
+	 * {@link AST}.
+	 */
+	public abstract String toCSSString();
 
 	/*
 	 This method is used in the GUI to create an appropriate label

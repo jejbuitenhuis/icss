@@ -31,6 +31,12 @@ public class BoolLiteral extends Literal
 	} // }}}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return null;
+	} // }}}
+
+	@Override
 	public String getNodeLabel()
 	{
 		String textValue = value ? "TRUE" : "FALSE";

@@ -24,6 +24,12 @@ public class IdSelector extends Selector
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return this.id;
+	} // }}}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o) return true;

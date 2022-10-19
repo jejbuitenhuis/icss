@@ -19,6 +19,12 @@ public class VariableReference extends Expression
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return null;
+	} // }}}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o) return true;

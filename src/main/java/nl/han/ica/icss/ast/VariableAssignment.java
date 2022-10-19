@@ -21,6 +21,12 @@ public class VariableAssignment extends ASTNode
 	}
 
 	@Override
+	public String tocsssString()
+	{ // {{{
+		return null;
+	} // }}}
+
+	@Override
 	public ASTNode addChild(ASTNode child)
 	{
 		if(name == null) name = (VariableReference) child;

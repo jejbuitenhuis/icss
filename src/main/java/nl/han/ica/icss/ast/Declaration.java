@@ -29,6 +29,16 @@ public class Declaration extends ASTNode
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return String.format(
+			"%s: %s;",
+			this.property.toCSSString(),
+			this.expression.toCSSString()
+		);
+	} // }}}
+
+	@Override
 	public ArrayList<ASTNode> getChildren()
 	{
 		ArrayList<ASTNode> children = new ArrayList<>();

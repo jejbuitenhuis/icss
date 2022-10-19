@@ -34,6 +34,12 @@ public class ColorLiteral extends Literal
 	} // }}}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return this.value;
+	} // }}}
+
+	@Override
 	public String getNodeLabel()
 	{
 		return "Color literal (" + value + ")";

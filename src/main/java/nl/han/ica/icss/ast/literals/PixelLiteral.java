@@ -25,6 +25,12 @@ public class PixelLiteral extends Literal
 	} // }}}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return String.format("%spx", this.value);
+	} // }}}
+
+	@Override
 	public String getNodeLabel()
 	{
 		return "Pixel literal (" + value + ")";

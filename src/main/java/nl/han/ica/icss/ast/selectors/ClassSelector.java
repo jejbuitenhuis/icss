@@ -25,6 +25,12 @@ public class ClassSelector extends Selector
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return this.cls;
+	} // }}}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o) return true;

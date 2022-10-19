@@ -21,4 +21,10 @@ public class PropertyName extends ASTNode
 	{
 		return "Property: (" + name + ")";
 	}
+
+	@Override
+	public String toCSSString()
+	{ // {{{
+		return this.name;
+	} // }}}
 }

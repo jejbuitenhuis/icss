@@ -24,6 +24,12 @@ public class TagSelector extends Selector
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return this.tag;
+	} // }}}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o) return true;

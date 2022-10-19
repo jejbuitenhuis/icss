@@ -8,6 +8,12 @@ public abstract class Operation extends Expression
 	public Expression rhs;
 
 	@Override
+	public final String toCSSString()
+	{ // {{{
+		return null;
+	} // }}}
+
+	@Override
 	public ArrayList<ASTNode> getChildren()
 	{
 		ArrayList<ASTNode> children = new ArrayList<>();

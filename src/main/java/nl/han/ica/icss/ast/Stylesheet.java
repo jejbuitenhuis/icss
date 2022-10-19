@@ -30,6 +30,17 @@ public class Stylesheet extends ASTNode
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		StringBuilder sb = new StringBuilder();
+
+		for (ASTNode childNode : this.body)
+			sb.append( childNode.toCSSString() );
+
+		return sb.toString();
+	} // }}}
+
+	@Override
 	public ArrayList<ASTNode> getChildren()
 	{
 		return this.body;

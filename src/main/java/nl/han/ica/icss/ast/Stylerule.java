@@ -2,9 +2,16 @@ package nl.han.ica.icss.ast;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Stylerule extends ASTNode
 {
+	private static final int INDENT_AMOUNT = 2;
+	private static final String WHITE_SPACE = IntStream.range(0, INDENT_AMOUNT)
+		.mapToObj(i -> " ")
+		.collect( Collectors.joining() );
+
 	public ArrayList<Selector> selectors = new ArrayList<>();
 	public ArrayList<ASTNode> body = new ArrayList<>();
 
@@ -23,6 +30,27 @@ public class Stylerule extends ASTNode
 	{
 		return "Stylerule";
 	}
+
+	@Override
+	public String toCSSString()
+	{ // {{{
+		StringBuilder sb = new StringBuilder();
+
+		String selectors = this.selectors.stream()
+			.map(ASTNode::toCSSString)
+			.collect( Collectors.joining(", ") );
+
+		sb.append(selectors);
+
+		sb.append(" {\n");
+
+		for (ASTNode child : this.body)
+			sb.append( WHITE_SPACE + child.toCSSString() + "\n" );
+
+		sb.append("}\n");
+
+		return sb.toString();
+	} // }}}
 
 	@Override
 	public ArrayList<ASTNode> getChildren()

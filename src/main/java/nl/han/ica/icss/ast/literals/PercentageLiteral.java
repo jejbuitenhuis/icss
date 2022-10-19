@@ -25,6 +25,12 @@ public class PercentageLiteral extends Literal
 	} // }}}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return String.format("%s%%", this.value);
+	} // }}}
+
+	@Override
 	public String getNodeLabel()
 	{
 		return "Percentage literal (" + value + ")";

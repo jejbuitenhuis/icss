@@ -22,6 +22,12 @@ public class ElseClause extends ASTNode
 	}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return null;
+	} // }}}
+
+	@Override
 	public ArrayList<ASTNode> getChildren()
 	{
 		ArrayList<ASTNode> children = new ArrayList<>();

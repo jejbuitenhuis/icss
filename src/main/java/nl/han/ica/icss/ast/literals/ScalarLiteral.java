@@ -25,6 +25,12 @@ public class ScalarLiteral extends Literal
 	} // }}}
 
 	@Override
+	public String toCSSString()
+	{ // {{{
+		return null;
+	} // }}}
+
+	@Override
 	public String getNodeLabel()
 	{
 		return "Scalar literal (" + value + ")";

@@ -31,6 +31,12 @@ public class IfClause extends ASTNode
 		return "If_Clause";
 	}
 
+	@Override
+	public String toCSSString()
+	{ // {{{
+		return null;
+	} // }}}
+
 	public Expression getConditionalExpression()
 	{
 		return conditionalExpression;
