@@ -1,7 +1,9 @@
 package nl.han.ica.icss.transforms.evaluators;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BinaryOperator;
 
 import nl.han.ica.datastructures.IHANLinkedList;
@@ -75,7 +77,7 @@ public class OperationEvaluator extends Evaluator
 	} // }}}
 
 	@Override
-	public <T extends ASTNode> ASTNode evaluate(
+	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
 		IHANLinkedList< HashMap<String, Literal> > variableValues
 	)
@@ -87,6 +89,6 @@ public class OperationEvaluator extends Evaluator
 
 		this.setVariableValues(variableValues);
 
-		return this.evaluate(node);
+		return new ArrayList<>( List.of( this.evaluate(node) ) );
 	} // }}}
 }

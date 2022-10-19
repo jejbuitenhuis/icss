@@ -1,6 +1,8 @@
 package nl.han.ica.icss.transforms.evaluators;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.ASTNode;
@@ -10,7 +12,7 @@ import nl.han.ica.icss.ast.VariableReference;
 public class VariableReferenceEvaluator extends Evaluator
 {
 	@Override
-	public <T extends ASTNode> ASTNode evaluate(
+	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
 		IHANLinkedList< HashMap<String, Literal> > variableValues
 	)
@@ -22,6 +24,6 @@ public class VariableReferenceEvaluator extends Evaluator
 
 		this.setVariableValues(variableValues);
 
-		return this.getVariableValue(node.name);
+		return new ArrayList<>( List.of( this.getVariableValue(node.name) ) );
 	} // }}}
 }

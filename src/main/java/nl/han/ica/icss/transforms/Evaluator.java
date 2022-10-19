@@ -16,8 +16,10 @@ public class Evaluator implements Transform
 	{
 		private static final long serialVersionUID = 1511648775391348036L;
 	{
+		add( new Pair<>( VariableAssignment.class, new VariableAssignmentEvaluator() ) );
 		add( new Pair<>( VariableReference.class, new VariableReferenceEvaluator() ) );
 		add( new Pair<>( Operation.class, new OperationEvaluator() ) );
+		add( new Pair<>( IfClause.class, new IfClauseEvaluator() ) );
 	}};
 
 	private IHANLinkedList< HashMap<String, Literal> > variableValues;
@@ -36,80 +38,59 @@ public class Evaluator implements Transform
 		return null;
 	} // }}}
 
-	private Literal getVariableValue(String variableName)
-	{ // {{{
-		for (int i = 0; i < this.variableValues.getSize(); i++)
-		{
-			Literal value = this.variableValues.get(i)
-				.get(variableName);
-
-			if (value != null) return value;
-		}
-
-		throw new RuntimeException( String.format(
-			"Undefined variable '%s'",
-			variableName
-		) );
-	} // }}}
-
-	private HashMap<String, Literal> extractVariableTypes(ASTNode node)
-	{ // {{{
-		HashMap<String, Literal> temp = new HashMap<>();
-
-		for ( ASTNode childNode : node.getChildren() )
-		{
-			if (childNode instanceof VariableAssignment)
-			{
-				VariableAssignment assignment = (VariableAssignment) childNode;
-				String name = assignment.name.name;
-				Expression expression = assignment.expression;
-
-				if (expression instanceof Literal)
-				{
-					temp.put( name, (Literal) expression );
-				}
-				else if (expression instanceof VariableReference)
-				{
-					temp.put(
-						name,
-						this.getVariableValue(
-							( (VariableReference) expression ).name
-						)
-					);
-				}
-				else
-				{
-					// TODO: Can an Operation be in a VariableAssignment?
-					throw new RuntimeException( String.format(
-						"Unexpected expression type '%s'",
-						expression.getClass().getSimpleName()
-					) );
-				}
-			}
-		}
-
-		return temp;
-	} // }}}
-
 	private void apply(ASTNode node)
 	{ // {{{
-		this.variableValues.addFirst( this.extractVariableTypes(node) );
+		// this.variableValues.addFirst( this.extractVariableTypes(node) );
+		this.variableValues.addFirst( new HashMap<>() );
 
-		for ( ASTNode childNode : node.getChildren() )
+		// keep a copy we can update beside the node itself, because if we
+		// don't, the for loop won't loop over the newly added children
+		// (because the `getChildren` returns a copy of the list instead of the
+		// list that the node actually has)
+		ArrayList<ASTNode> children = node.getChildren();
+		// because we can't loop over a List and update it at the same time, we
+		// loop over it with a while loop and keep track of the index ourself
+		int index = 0;
+
+		while ( index < children.size() )
 		{
+			ASTNode childNode = children.get(index);
+
 			EvaluatorFunction function = Evaluator.getEvaluatorForNode(childNode);
 
-			if (function != null)
+			if (function == null)
 			{
-				ASTNode newNode = function.evaluate(childNode, this.variableValues);
-
-				node.removeChild(childNode);
-				node.addChild(newNode);
+				++index;
+				continue;
 			}
 
+			ArrayList<ASTNode> newNodes = function.evaluate(childNode, this.variableValues);
+
+			int indexOfRemovedChild = children.indexOf(childNode);
+
+			children.remove(childNode);
+			node.removeChild(childNode);
+
+			// the object being removed is before the index, so everything,
+			// including the current index, is shifted to the left once
+			if (indexOfRemovedChild <= index && index > 0) --index;
+
+			if (newNodes != null)
+			{
+				children.addAll(newNodes);
+
+				for (ASTNode newChild : newNodes)
+					node.addChild(newChild);
+			}
+		}
+
+		// some evaluators change the node's structure so much, we can't have
+		// this check inside the loop above, because then we would also
+		// evaluate the children of the childNode, even if these don't have to
+		// be evaluated (e.g. some children of the IfClause and ElseClause)
+		for ( ASTNode childNode : node.getChildren() )
 			if ( childNode.getChildren().size() > 0 )
 				this.apply(childNode);
-		}
 
 		this.variableValues.removeFirst();
 	} // }}}

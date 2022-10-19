@@ -27,6 +27,6 @@ Code explanations:
 | ✅          | CH05 | Check if the condition in an if-else expression is a boolean type. | Should |
 | ✅          | CH06 | Check if variables are used within the correct scope. | Must |
 | ✅          | TR01 | Evaluate expressions (replace variables with their values). | Must |
-| ❌          | TR02 | Evaluate if-else expressions. If the expression is `TRUE`, use the body of the if-statement. If the expression is `FALSE`, use the body of the else-statement. If there is no else-statement, use an empty body. | Must |
+| ✅          | TR02 | Evaluate if-else expressions. If the expression is `TRUE`, use the body of the if-statement. If the expression is `FALSE`, use the body of the else-statement. If there is no else-statement, use an empty body. | Must |
 | ❌          | GE01 | Implement the generator (`nl.han.ica.icss.generator.Generator`) to generate a CSS2-compliant string. | Must |
 | ❌          | GE02 | Change the generator to return formatted CSS (indented with 2 spaces). | Must |
