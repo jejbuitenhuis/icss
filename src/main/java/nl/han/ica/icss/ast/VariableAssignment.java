@@ -21,7 +21,7 @@ public class VariableAssignment extends ASTNode
 	}
 
 	@Override
-	public String tocsssString()
+	public String toCSSString()
 	{ // {{{
 		return null;
 	} // }}}
