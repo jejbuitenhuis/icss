@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-import nl.han.ica.datastructures.IHANLinkedList;
+import nl.han.ica.datastructures.IScopeList;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Expression;
 import nl.han.ica.icss.ast.Literal;
@@ -15,7 +15,7 @@ import nl.han.ica.icss.ast.VariableReference;
 import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.*;
 
-public class OperationEvaluator extends Evaluator
+public class OperationEvaluator implements EvaluatorFunction
 {
 	private static final HashMap< Class<? extends Operation>, BinaryOperator<Integer> > OPERATORS = new HashMap<>()
 	{
@@ -26,19 +26,19 @@ public class OperationEvaluator extends Evaluator
 		put( MultiplyOperation.class, (Integer l, Integer r) -> l * r );
 	}};
 
-	private Literal expressionToLiteral(Expression expr)
+	private Literal expressionToLiteral(Expression expr, IScopeList<Literal> variableValues)
 	{ // {{{
 		if (expr instanceof Literal)
 			return (Literal) expr;
 		else if (expr instanceof Operation)
-			return this.evaluate( (Operation) expr );
+			return this.evaluate( (Operation) expr, variableValues );
 		else if (expr instanceof VariableReference)
-			return this.getVariableValue( ( (VariableReference) expr ).name );
+			return variableValues.get( ( (VariableReference) expr ).name );
 		else
 			throw new RuntimeException( "Unexpected left operation type " + expr.getClass().getName() );
 	} // }}}
 
-	private Literal evaluate(Operation node)
+	private Literal evaluate(Operation node, IScopeList<Literal> variableValues)
 	{ // {{{
 		BinaryOperator<Integer> function = OPERATORS.get( node.getClass() );
 
@@ -48,8 +48,8 @@ public class OperationEvaluator extends Evaluator
 				node.getClass().getSimpleName()
 			) );
 
-		Literal literalLeft = this.expressionToLiteral(node.lhs);
-		Literal literalRight = this.expressionToLiteral(node.rhs);
+		Literal literalLeft = this.expressionToLiteral(node.lhs, variableValues);
+		Literal literalRight = this.expressionToLiteral(node.rhs, variableValues);
 
 		int valueLeft = literalLeft.getValue();
 		int valueRight = literalRight.getValue();
@@ -79,7 +79,7 @@ public class OperationEvaluator extends Evaluator
 	@Override
 	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
-		IHANLinkedList< HashMap<String, Literal> > variableValues
+		IScopeList<Literal> variableValues
 	)
 	{ // {{{
 		if ( !(nodeToEvaluate instanceof Operation) )
@@ -87,8 +87,6 @@ public class OperationEvaluator extends Evaluator
 
 		Operation node = (Operation) nodeToEvaluate;
 
-		this.setVariableValues(variableValues);
-
-		return new ArrayList<>( List.of( this.evaluate(node) ) );
+		return new ArrayList<>( List.of( this.evaluate(node, variableValues) ) );
 	} // }}}
 }

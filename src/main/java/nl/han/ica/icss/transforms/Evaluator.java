@@ -1,12 +1,11 @@
 package nl.han.ica.icss.transforms;
 
-import nl.han.ica.datastructures.IHANLinkedList;
-import nl.han.ica.datastructures.implementations.HANLinkedList;
+import nl.han.ica.datastructures.IScopeList;
+import nl.han.ica.datastructures.implementations.ScopeList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.transforms.evaluators.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javafx.util.Pair;
 
@@ -22,11 +21,11 @@ public class Evaluator implements Transform
 		add( new Pair<>( IfClause.class, new IfClauseEvaluator() ) );
 	}};
 
-	private IHANLinkedList< HashMap<String, Literal> > variableValues;
+	private IScopeList<Literal> variableValues;
 
 	public Evaluator()
 	{
-		this.variableValues = new HANLinkedList<>();
+		this.variableValues = new ScopeList<>();
 	}
 
 	private static EvaluatorFunction getEvaluatorForNode(ASTNode node)
@@ -40,8 +39,7 @@ public class Evaluator implements Transform
 
 	private void apply(ASTNode node)
 	{ // {{{
-		// this.variableValues.addFirst( this.extractVariableTypes(node) );
-		this.variableValues.addFirst( new HashMap<>() );
+		this.variableValues.push();
 
 		// keep a copy we can update beside the node itself, because if we
 		// don't, the for loop won't loop over the newly added children
@@ -92,13 +90,13 @@ public class Evaluator implements Transform
 			if ( childNode.getChildren().size() > 0 )
 				this.apply(childNode);
 
-		this.variableValues.removeFirst();
+		this.variableValues.pop();
 	} // }}}
 
 	@Override
 	public void apply(AST ast)
 	{
-		this.variableValues = new HANLinkedList<>();
+		this.variableValues = new ScopeList<>();
 
 		this.apply(ast.root);
 	}

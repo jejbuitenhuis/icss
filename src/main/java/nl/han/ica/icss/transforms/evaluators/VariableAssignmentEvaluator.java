@@ -1,21 +1,20 @@
 package nl.han.ica.icss.transforms.evaluators;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import nl.han.ica.datastructures.IHANLinkedList;
+import nl.han.ica.datastructures.IScopeList;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Expression;
 import nl.han.ica.icss.ast.Literal;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.VariableAssignment;
 
-public class VariableAssignmentEvaluator extends Evaluator
+public class VariableAssignmentEvaluator implements EvaluatorFunction
 {
 	@Override
 	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
-		IHANLinkedList< HashMap<String, Literal> > variableValues
+		IScopeList<Literal> variableValues
 	)
 	{ // {{{
 		if ( !(nodeToEvaluate instanceof VariableAssignment) )
@@ -42,8 +41,7 @@ public class VariableAssignmentEvaluator extends Evaluator
 		if ( !(value instanceof Literal) )
 			throw new RuntimeException( "Expected Literal, got " + value.getClass().getName() );
 
-		variableValues.getFirst()
-			.put( name, (Literal) value );
+		variableValues.set( name, (Literal) value );
 
 		return null;
 	} // }}}
