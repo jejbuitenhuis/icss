@@ -1,6 +1,6 @@
 # ICSS
 
-A school project to write a preprocessor transpiler, named ICSS.
+A school project to write a CSS preprocessor transpiler, named ICSS.
 
 # Requirements
 
