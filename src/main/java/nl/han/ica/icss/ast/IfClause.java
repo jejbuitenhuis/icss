@@ -74,6 +74,18 @@ public class IfClause extends ASTNode
 	}
 
 	@Override
+	public ASTNode removeChild(ASTNode child) {
+		if (child instanceof Expression)
+			this.conditionalExpression = null;
+		else if (child instanceof ElseClause)
+			this.elseClause = null;
+		else
+			this.body.remove(child);
+
+		return this;
+	}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (this == o) return true;

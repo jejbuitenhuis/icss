@@ -14,6 +14,7 @@ import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.VariableReference;
 import nl.han.ica.icss.ast.literals.ScalarLiteral;
 import nl.han.ica.icss.ast.operations.*;
+import nl.han.ica.icss.transforms.Evaluator;
 
 public class OperationEvaluator implements EvaluatorFunction
 {
@@ -79,7 +80,8 @@ public class OperationEvaluator implements EvaluatorFunction
 	@Override
 	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
-		IScopeList<Literal> variableValues
+		IScopeList<Literal> variableValues,
+		Evaluator evaluator
 	)
 	{ // {{{
 		if ( !(nodeToEvaluate instanceof Operation) )

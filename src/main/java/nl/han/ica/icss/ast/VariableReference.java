@@ -21,7 +21,7 @@ public class VariableReference extends Expression
 	@Override
 	public String toCSSString()
 	{ // {{{
-		return null;
+		return this.name;
 	} // }}}
 
 	@Override

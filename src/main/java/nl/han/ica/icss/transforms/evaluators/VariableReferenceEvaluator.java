@@ -7,13 +7,15 @@ import nl.han.ica.datastructures.IScopeList;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Literal;
 import nl.han.ica.icss.ast.VariableReference;
+import nl.han.ica.icss.transforms.Evaluator;
 
 public class VariableReferenceEvaluator implements EvaluatorFunction
 {
 	@Override
 	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
-		IScopeList<Literal> variableValues
+		IScopeList<Literal> variableValues,
+		Evaluator evaluator
 	)
 	{ // {{{
 		if ( !(nodeToEvaluate instanceof VariableReference) )

@@ -15,10 +15,13 @@ public class Evaluator implements Transform
 	{
 		private static final long serialVersionUID = 1511648775391348036L;
 	{
+		add( new Pair<>( Stylerule.class, new StyleruleEvaluator() ) );
+		add( new Pair<>( Declaration.class, new DeclarationEvaluator() ) );
 		add( new Pair<>( VariableAssignment.class, new VariableAssignmentEvaluator() ) );
 		add( new Pair<>( VariableReference.class, new VariableReferenceEvaluator() ) );
 		add( new Pair<>( Operation.class, new OperationEvaluator() ) );
 		add( new Pair<>( IfClause.class, new IfClauseEvaluator() ) );
+		add( new Pair<>( ElseClause.class, new ElseClauseEvaluator() ) );
 	}};
 
 	private IScopeList<Literal> variableValues;
@@ -37,58 +40,36 @@ public class Evaluator implements Transform
 		return null;
 	} // }}}
 
-	private void apply(ASTNode node)
+	public void apply(ASTNode node)
 	{ // {{{
 		this.variableValues.push();
 
-		// keep a copy we can update beside the node itself, because if we
-		// don't, the for loop won't loop over the newly added children
-		// (because the `getChildren` returns a copy of the list instead of the
-		// list that the node actually has)
-		ArrayList<ASTNode> children = node.getChildren();
-		// because we can't loop over a List and update it at the same time, we
-		// loop over it with a while loop and keep track of the index ourself
-		int index = 0;
+		// clone the children to prevent a ConcurrentModificationException from
+		// being thrown in the loop below
+		ArrayList<ASTNode> children = (ArrayList<ASTNode>) node.getChildren()
+			.clone();
 
-		while ( index < children.size() )
+		for (ASTNode childNode : children)
 		{
-			ASTNode childNode = children.get(index);
-
 			EvaluatorFunction function = Evaluator.getEvaluatorForNode(childNode);
 
-			if (function == null)
+			if (function != null)
 			{
-				++index;
-				continue;
-			}
+				ArrayList<ASTNode> newNodes = function.evaluate(
+					childNode,
+					this.variableValues,
+					this
+				);
 
-			ArrayList<ASTNode> newNodes = function.evaluate(childNode, this.variableValues);
+				if (newNodes != null)
+				{
+					node.removeChild(childNode);
 
-			int indexOfRemovedChild = children.indexOf(childNode);
-
-			children.remove(childNode);
-			node.removeChild(childNode);
-
-			// the object being removed is before the index, so everything,
-			// including the current index, is shifted to the left once
-			if (indexOfRemovedChild <= index && index > 0) --index;
-
-			if (newNodes != null)
-			{
-				children.addAll(newNodes);
-
-				for (ASTNode newChild : newNodes)
-					node.addChild(newChild);
+					for (ASTNode newChild : newNodes)
+						node.addChild(newChild);
+				}
 			}
 		}
-
-		// some evaluators change the node's structure so much, we can't have
-		// this check inside the loop above, because then we would also
-		// evaluate the children of the childNode, even if these don't have to
-		// be evaluated (e.g. some children of the IfClause and ElseClause)
-		for ( ASTNode childNode : node.getChildren() )
-			if ( childNode.getChildren().size() > 0 )
-				this.apply(childNode);
 
 		this.variableValues.pop();
 	} // }}}

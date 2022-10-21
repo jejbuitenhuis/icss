@@ -9,13 +9,15 @@ import nl.han.ica.icss.ast.IfClause;
 import nl.han.ica.icss.ast.Literal;
 import nl.han.ica.icss.ast.VariableReference;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
+import nl.han.ica.icss.transforms.Evaluator;
 
 public class IfClauseEvaluator implements EvaluatorFunction
 {
 	@Override
 	public <T extends ASTNode> ArrayList<ASTNode> evaluate(
 		T nodeToEvaluate,
-		IScopeList<Literal> variableValues
+		IScopeList<Literal> variableValues,
+		Evaluator evaluator
 	)
 	{ // {{{
 		if ( !(nodeToEvaluate instanceof IfClause) )
@@ -31,12 +33,14 @@ public class IfClauseEvaluator implements EvaluatorFunction
 		if ( !(boolConditional instanceof BoolLiteral) )
 			throw new RuntimeException( "Expected boolean literal, got " + boolConditional.getClass().getName() );
 
+		evaluator.apply(node);
+
 		BoolLiteral conditional = (BoolLiteral) boolConditional;
 
 		ArrayList<ASTNode> ifBody = node.body;
 		ArrayList<ASTNode> elseBody = node.elseClause != null
 			? node.elseClause.body
-			: null;
+			: new ArrayList<>();
 
 		return conditional.value ? ifBody : elseBody;
 	} // }}}
