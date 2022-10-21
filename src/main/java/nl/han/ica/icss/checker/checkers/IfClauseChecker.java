@@ -1,8 +1,6 @@
 package nl.han.ica.icss.checker.checkers;
 
-import java.util.HashMap;
-
-import nl.han.ica.datastructures.IHANLinkedList;
+import nl.han.ica.datastructures.IScopeList;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.IfClause;
 import nl.han.ica.icss.ast.types.ExpressionType;
@@ -14,7 +12,7 @@ public class IfClauseChecker implements CheckerFunction
 	@Override
 	public <T extends ASTNode> void check(
 		T nodeToCheck,
-		IHANLinkedList< HashMap<String, ExpressionType> > variableTypes
+		IScopeList<ExpressionType> variableTypes
 	)
 	{ // {{{
 		if ( !(nodeToCheck instanceof IfClause) )

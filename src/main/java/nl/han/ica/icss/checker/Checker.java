@@ -1,7 +1,10 @@
 package nl.han.ica.icss.checker;
 
-import nl.han.ica.datastructures.IHANLinkedList;
-import nl.han.ica.datastructures.implementations.HANLinkedList;
+import java.util.ArrayList;
+
+import javafx.util.Pair;
+import nl.han.ica.datastructures.IScopeList;
+import nl.han.ica.datastructures.implementations.ScopeList;
 import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Declaration;
@@ -9,16 +12,14 @@ import nl.han.ica.icss.ast.IfClause;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.VariableAssignment;
 import nl.han.ica.icss.ast.types.ExpressionType;
-import nl.han.ica.icss.checker.checkers.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javafx.util.Pair;
+import nl.han.ica.icss.checker.checkers.CheckerFunction;
+import nl.han.ica.icss.checker.checkers.DeclarationChecker;
+import nl.han.ica.icss.checker.checkers.IfClauseChecker;
+import nl.han.ica.icss.checker.checkers.OperationChecker;
 
 public class Checker
 {
-	private IHANLinkedList< HashMap<String, ExpressionType> > variableTypes;
+	private IScopeList<ExpressionType> variableTypes;
 
 	private static final ArrayList< Pair< Class<? extends ASTNode>, CheckerFunction > > CHECKERS = new ArrayList<>()
 	{
@@ -38,10 +39,8 @@ public class Checker
 		return null;
 	} // }}}
 
-	private HashMap<String, ExpressionType> extractVariableTypes(ASTNode node)
+	private void extractVariableTypes(ASTNode node)
 	{ // {{{
-		HashMap<String, ExpressionType> temp = new HashMap<>();
-
 		for ( ASTNode childNode : node.getChildren() )
 		{
 			if (childNode instanceof VariableAssignment)
@@ -53,16 +52,15 @@ public class Checker
 					this.variableTypes
 				);
 
-				temp.put(name, type);
+				this.variableTypes.set(name, type);
 			}
 		}
-
-		return temp;
 	} // }}}
 
 	private void check(ASTNode node)
 	{ // {{{
-		this.variableTypes.addFirst( this.extractVariableTypes(node) );
+		this.variableTypes.push();
+		this.extractVariableTypes(node);
 
 		for ( ASTNode childNode : node.getChildren() )
 		{
@@ -75,12 +73,12 @@ public class Checker
 				this.check(childNode);
 		}
 
-		this.variableTypes.removeFirst();
+		this.variableTypes.pop();
 	} // }}}
 
 	public void check(AST ast)
 	{ // {{{
-		this.variableTypes = new HANLinkedList<>();
+		this.variableTypes = new ScopeList<>();
 
 		this.check(ast.root);
 	} // }}}

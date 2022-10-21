@@ -3,6 +3,7 @@ package nl.han.ica.icss.ast.types;
 import java.util.HashMap;
 
 import nl.han.ica.datastructures.IHANLinkedList;
+import nl.han.ica.datastructures.IScopeList;
 import nl.han.ica.icss.ast.Expression;
 import nl.han.ica.icss.ast.Operation;
 import nl.han.ica.icss.ast.VariableReference;
@@ -32,19 +33,7 @@ public enum ExpressionType
 		put(BoolLiteral.class, BOOL);
 	}};
 
-	private static ExpressionType fromVariableReference(VariableReference reference, IHANLinkedList< HashMap<String, ExpressionType> > variableTypes)
-	{ // {{{
-		for (int i = 0; i < variableTypes.getSize(); i++)
-		{
-			ExpressionType type = variableTypes.get(i).get(reference.name);
-
-			if (type != null) return type;
-		}
-
-		return UNDEFINED;
-	} // }}}
-
-	private static ExpressionType fromOperation(Operation operation, IHANLinkedList< HashMap<String, ExpressionType> > variableTypes)
+	private static ExpressionType fromOperation(Operation operation, IScopeList<ExpressionType> variableTypes)
 	{ // {{{
 		ExpressionType typeLeft = ExpressionType.fromExpression(operation.lhs, variableTypes);
 		ExpressionType typeRight = ExpressionType.fromExpression(operation.rhs, variableTypes);
@@ -58,17 +47,18 @@ public enum ExpressionType
 		return typeLeft;
 	} // }}}
 
-	public static ExpressionType fromExpression(Expression expression, IHANLinkedList< HashMap<String, ExpressionType> > variableTypes)
+	public static ExpressionType fromExpression(Expression expression, IScopeList<ExpressionType> variableTypes)
 	{ // {{{
 		ExpressionType type = EXPRESSION_TYPES.get( expression.getClass() );
 
 		if (type != null) return type;
 
 		if (expression instanceof VariableReference)
-			return ExpressionType.fromVariableReference(
-				(VariableReference) expression,
-				variableTypes
-			);
+		{
+			type = variableTypes.get( ( (VariableReference) expression ).name );
+
+			return type == null ? UNDEFINED : type;
+		}
 
 		if (expression instanceof Operation)
 			return ExpressionType.fromOperation(

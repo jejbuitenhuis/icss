@@ -39,10 +39,7 @@ public class ScopeList<T> implements IScopeList<T>
 			if (value != null) return value;
 		}
 
-		throw new RuntimeException( String.format(
-			"Undefined variable '%s' in ScopeList",
-			name
-		) );
+		return null;
 	} // }}}
 
 	@Override
