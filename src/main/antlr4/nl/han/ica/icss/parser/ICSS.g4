@@ -63,7 +63,6 @@ operation: expression
 	| operation operatorPrio operation
 	| operation operator operation;
 
-// TODO: Shouldn't `expression` be a `operation`?
 variableAssignment: variableReference ASSIGNMENT_OPERATOR operation SEMICOLON;
 
 styling: ifStatement | variableAssignment | (declaration COLON operation SEMICOLON);
