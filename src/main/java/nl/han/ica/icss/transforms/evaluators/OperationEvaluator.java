@@ -36,7 +36,7 @@ public class OperationEvaluator implements EvaluatorFunction
 		else if (expr instanceof VariableReference)
 			return variableValues.get( ( (VariableReference) expr ).name );
 		else
-			throw new RuntimeException( "Unexpected left operation type " + expr.getClass().getName() );
+			throw new RuntimeException( "Unexpected operation type " + expr.getClass().getName() );
 	} // }}}
 
 	private Literal evaluate(Operation node, IScopeList<Literal> variableValues)

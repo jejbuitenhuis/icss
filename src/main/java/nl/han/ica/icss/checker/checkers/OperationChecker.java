@@ -52,7 +52,7 @@ public class OperationChecker implements CheckerFunction
 
 		ExpressionType typeRight = ExpressionType.fromExpression(right, variableTypes);
 
-		if ( !node.hasError() && !(right instanceof Operation) )
+		if ( !(right instanceof Operation) )
 		{
 			if ( DISALLOWED_TYPES.contains(typeRight) )
 			{
